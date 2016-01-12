@@ -64,6 +64,43 @@ func (c *Client) Issues() (IssueSlice, error) {
 	return issues, nil
 }
 
+// IssuesWithOption is
+func (c *Client) IssuesWithOption(opt *IssuesOption) (IssueSlice, error) {
+	url := c.appendAPIKey(c.BaseURL + "/api/v2/issues")
+
+	query, err := opt.ParamString()
+	if err != nil {
+		return nil, err
+	}
+
+	url = url + "&" + query
+
+	req, _ := http.NewRequest("GET", url, nil)
+	res, err := c.HTTPClient.Do(req)
+	defer res.Body.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
+	r, e := charset.NewReader(res.Body, "")
+	if e != nil {
+		return nil, e
+	}
+
+	bytes, er := ioutil.ReadAll(r)
+
+	if er != nil {
+		return nil, er
+	}
+
+	// fmt.Println(string(bytes))
+	var issues IssueSlice
+	json.Unmarshal(bytes, &issues)
+
+	return issues, nil
+}
+
 // IssueWithKey is
 func (c *Client) IssueWithKey(issueIDOrKey string) (*Issue, error) {
 	url := c.appendAPIKey(c.BaseURL + "/api/v2/issues/" + issueIDOrKey)
