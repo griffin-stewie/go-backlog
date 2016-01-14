@@ -50,3 +50,13 @@ type IssueType struct {
 	Color        *string `json:"color,omitempty"`
 	DisplayOrder *int    `json:"displayOrder,omitempty"`
 }
+
+// User represents
+type User struct {
+	ID          *int    `json:"id,omitempty"`
+	UserID      *string `json:"userId,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	RoleType    *int    `json:"roleType,omitempty"`
+	Lang        *string `json:"lang,omitempty"`
+	MailAddress *string `json:"mailAddress,omitempty"`
+}
