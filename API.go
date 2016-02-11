@@ -34,6 +34,36 @@ func (c *Client) appendAPIKey(URL string) string {
 	return URL + "?apiKey=" + c.APIKey
 }
 
+// Space returns
+func (c *Client) Space() (*Space, error) {
+	url := c.appendAPIKey(c.BaseURL + "/api/v2/space")
+
+	req, _ := http.NewRequest("GET", url, nil)
+	res, err := c.HTTPClient.Do(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+
+	r, e := charset.NewReader(res.Body, "")
+	if e != nil {
+		return nil, e
+	}
+
+	bytes, er := ioutil.ReadAll(r)
+
+	if er != nil {
+		return nil, er
+	}
+
+	fmt.Println(string(bytes))
+	var space *Space
+	json.Unmarshal(bytes, &space)
+	return space, nil
+}
+
 // Myself returns
 func (c *Client) Myself() (*User, error) {
 	url := c.appendAPIKey(c.BaseURL + "/api/v2/users/myself")

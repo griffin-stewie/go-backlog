@@ -60,3 +60,16 @@ type User struct {
 	Lang        *string `json:"lang,omitempty"`
 	MailAddress *string `json:"mailAddress,omitempty"`
 }
+
+// Space represents
+type Space struct {
+	SpaceKey           *string    `json:"spaceKey,omitempty"`
+	Name               *string    `json:"name,omitempty"`
+	OwnerID            *int       `json:"ownerId,omitempty"`
+	Lang               *string    `json:"lang,omitempty"`
+	Timezone           *string    `json:"timezone,omitempty"`
+	ReportSendTime     *string    `json:"reportSendTime,omitempty"`
+	TextFormattingRule *string    `json:"textFormattingRule,omitempty"`
+	Created            *time.Time `json:"created,omitempty"`
+	Updated            *time.Time `json:"updated,omitempty"`
+}
