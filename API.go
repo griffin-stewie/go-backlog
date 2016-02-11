@@ -94,6 +94,37 @@ func (c *Client) SpaceNotification() (*SpaceNotification, error) {
 	return spaceNotification, nil
 }
 
+// DiskUsage /api/v2/space/diskUsage
+func (c *Client) DiskUsage() (*DiskUsage, error) {
+
+	url := c.appendAPIKey(c.BaseURL + "/api/v2/space/diskUsage")
+
+	req, _ := http.NewRequest("GET", url, nil)
+	res, err := c.HTTPClient.Do(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+
+	r, e := charset.NewReader(res.Body, "")
+	if e != nil {
+		return nil, e
+	}
+
+	bytes, er := ioutil.ReadAll(r)
+
+	if er != nil {
+		return nil, er
+	}
+
+	fmt.Println(string(bytes))
+	var diskUsage *DiskUsage
+	json.Unmarshal(bytes, &diskUsage)
+	return diskUsage, nil
+}
+
 // Myself returns
 func (c *Client) Myself() (*User, error) {
 	url := c.appendAPIKey(c.BaseURL + "/api/v2/users/myself")

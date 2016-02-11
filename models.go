@@ -79,3 +79,38 @@ type SpaceNotification struct {
 	Content *string    `json:"content,omitempty"`
 	Updated *time.Time `json:"updated,omitempty"`
 }
+
+// DiskUsage represents
+type DiskUsage struct {
+	Capacity    *int                 `json:"capacity,omitempty"`
+	Issue       *int                 `json:"issue,omitempty"`
+	Wiki        *int                 `json:"wiki,omitempty"`
+	File        *int                 `json:"file,omitempty"`
+	Subversion  *int                 `json:"subversion,omitempty"`
+	Git         *int                 `json:"git,omitempty"`
+	PullRequest *int                 `json:"pullRequest,omitempty"`
+	Details     DiskUsageDetailSlice `json:"details,omitempty"`
+}
+
+// DiskUsageDetail represents
+// +gen * slice:"Where,Count,SortBy,GroupBy[string]"
+type DiskUsageDetail struct {
+	ProjectID   *int `json:"projectId,omitempty"`
+	Issue       *int `json:"issue,omitempty"`
+	Wiki        *int `json:"wiki,omitempty"`
+	File        *int `json:"file,omitempty"`
+	Subversion  *int `json:"subversion,omitempty"`
+	Git         *int `json:"git,omitempty"`
+	PullRequest *int `json:"pullRequest,omitempty"`
+}
+
+// Total returns total disk usage, byte unit.
+func (d *DiskUsageDetail) Total() int {
+	total := *d.Issue +
+		*d.Wiki +
+		*d.File +
+		*d.Subversion +
+		*d.Git +
+		*d.PullRequest
+	return total
+}
