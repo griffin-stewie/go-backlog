@@ -73,3 +73,9 @@ type Space struct {
 	Created            *time.Time `json:"created,omitempty"`
 	Updated            *time.Time `json:"updated,omitempty"`
 }
+
+// SpaceNotification represents
+type SpaceNotification struct {
+	Content *string    `json:"content,omitempty"`
+	Updated *time.Time `json:"updated,omitempty"`
+}

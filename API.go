@@ -58,10 +58,40 @@ func (c *Client) Space() (*Space, error) {
 		return nil, er
 	}
 
-	fmt.Println(string(bytes))
 	var space *Space
 	json.Unmarshal(bytes, &space)
 	return space, nil
+}
+
+// SpaceNotification /api/v2/space/notification
+func (c *Client) SpaceNotification() (*SpaceNotification, error) {
+
+	url := c.appendAPIKey(c.BaseURL + "/api/v2/space/notification")
+
+	req, _ := http.NewRequest("GET", url, nil)
+	res, err := c.HTTPClient.Do(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+
+	r, e := charset.NewReader(res.Body, "")
+	if e != nil {
+		return nil, e
+	}
+
+	bytes, er := ioutil.ReadAll(r)
+
+	if er != nil {
+		return nil, er
+	}
+
+	fmt.Println(string(bytes))
+	var spaceNotification *SpaceNotification
+	json.Unmarshal(bytes, &spaceNotification)
+	return spaceNotification, nil
 }
 
 // Myself returns
