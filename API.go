@@ -114,11 +114,12 @@ func (c *Client) Myself() (*User, error) {
 
 	req, _ := http.NewRequest("GET", url, nil)
 	res, err := c.HTTPClient.Do(req)
-	defer res.Body.Close()
 
 	if err != nil {
 		return nil, err
 	}
+
+	defer res.Body.Close()
 
 	bytes, er := ioutil.ReadAll(res.Body)
 
@@ -142,11 +143,12 @@ func (c *Client) Issues() (IssueSlice, error) {
 
 	req, _ := http.NewRequest("GET", url, nil)
 	res, err := c.HTTPClient.Do(req)
-	defer res.Body.Close()
 
 	if err != nil {
 		return nil, err
 	}
+
+	defer res.Body.Close()
 
 	bytes, er := ioutil.ReadAll(res.Body)
 
@@ -174,11 +176,12 @@ func (c *Client) IssuesWithOption(opt *IssuesOption) (IssueSlice, error) {
 
 	req, _ := http.NewRequest("GET", url, nil)
 	res, err := c.HTTPClient.Do(req)
-	defer res.Body.Close()
 
 	if err != nil {
 		return nil, err
 	}
+
+	defer res.Body.Close()
 
 	bytes, er := ioutil.ReadAll(res.Body)
 
@@ -202,11 +205,12 @@ func (c *Client) IssueWithKey(issueIDOrKey string) (*Issue, error) {
 
 	req, _ := http.NewRequest("GET", url, nil)
 	res, err := c.HTTPClient.Do(req)
-	defer res.Body.Close()
 
 	if err != nil {
 		return nil, err
 	}
+
+	defer res.Body.Close()
 
 	bytes, er := ioutil.ReadAll(res.Body)
 
