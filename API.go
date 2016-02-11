@@ -1,8 +1,6 @@
 package gobacklog
 
 import (
-	"golang.org/x/net/html/charset"
-
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -47,12 +45,7 @@ func (c *Client) Space() (*Space, error) {
 
 	defer res.Body.Close()
 
-	r, e := charset.NewReader(res.Body, "")
-	if e != nil {
-		return nil, e
-	}
-
-	bytes, er := ioutil.ReadAll(r)
+	bytes, er := ioutil.ReadAll(res.Body)
 
 	if er != nil {
 		return nil, er
@@ -77,12 +70,7 @@ func (c *Client) SpaceNotification() (*SpaceNotification, error) {
 
 	defer res.Body.Close()
 
-	r, e := charset.NewReader(res.Body, "")
-	if e != nil {
-		return nil, e
-	}
-
-	bytes, er := ioutil.ReadAll(r)
+	bytes, er := ioutil.ReadAll(res.Body)
 
 	if er != nil {
 		return nil, er
@@ -108,12 +96,7 @@ func (c *Client) DiskUsage() (*DiskUsage, error) {
 
 	defer res.Body.Close()
 
-	r, e := charset.NewReader(res.Body, "")
-	if e != nil {
-		return nil, e
-	}
-
-	bytes, er := ioutil.ReadAll(r)
+	bytes, er := ioutil.ReadAll(res.Body)
 
 	if er != nil {
 		return nil, er
@@ -137,12 +120,7 @@ func (c *Client) Myself() (*User, error) {
 		return nil, err
 	}
 
-	r, e := charset.NewReader(res.Body, "")
-	if e != nil {
-		return nil, e
-	}
-
-	bytes, er := ioutil.ReadAll(r)
+	bytes, er := ioutil.ReadAll(res.Body)
 
 	if er != nil {
 		return nil, er
@@ -170,12 +148,7 @@ func (c *Client) Issues() (IssueSlice, error) {
 		return nil, err
 	}
 
-	r, e := charset.NewReader(res.Body, "")
-	if e != nil {
-		return nil, e
-	}
-
-	bytes, er := ioutil.ReadAll(r)
+	bytes, er := ioutil.ReadAll(res.Body)
 
 	if er != nil {
 		return nil, er
@@ -207,12 +180,7 @@ func (c *Client) IssuesWithOption(opt *IssuesOption) (IssueSlice, error) {
 		return nil, err
 	}
 
-	r, e := charset.NewReader(res.Body, "")
-	if e != nil {
-		return nil, e
-	}
-
-	bytes, er := ioutil.ReadAll(r)
+	bytes, er := ioutil.ReadAll(res.Body)
 
 	if er != nil {
 		return nil, er
@@ -240,12 +208,7 @@ func (c *Client) IssueWithKey(issueIDOrKey string) (*Issue, error) {
 		return nil, err
 	}
 
-	r, e := charset.NewReader(res.Body, "")
-	if e != nil {
-		return nil, e
-	}
-
-	bytes, er := ioutil.ReadAll(r)
+	bytes, er := ioutil.ReadAll(res.Body)
 
 	if er != nil {
 		return nil, er
