@@ -10,42 +10,9 @@ import (
 // PrintResponseJSON is bool
 var PrintResponseJSON = false
 
-// Client is
-type Client struct {
-	BaseURL    string
-	HTTPClient *http.Client
-	APIKey     string
-}
-
-// NewClient returns Backlog HTTP Client
-func NewClient(baseURL, APIKey string) *Client {
-	s := &Client{
-		BaseURL:    baseURL,
-		APIKey:     APIKey,
-		HTTPClient: http.DefaultClient,
-	}
-
-	return s
-}
-
-func (c *Client) appendAPIKey(URL string) string {
-	return URL + "?apiKey=" + c.APIKey
-}
-
 // Space returns
 func (c *Client) Space() (*Space, error) {
-	url := c.appendAPIKey(c.BaseURL + "/api/v2/space")
-
-	req, _ := http.NewRequest("GET", url, nil)
-	res, err := c.HTTPClient.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-
-	bytes, er := ioutil.ReadAll(res.Body)
+	bytes, er := c.Get("/api/v2/space", map[string]string{})
 
 	if er != nil {
 		return nil, er
@@ -58,19 +25,7 @@ func (c *Client) Space() (*Space, error) {
 
 // SpaceNotification /api/v2/space/notification
 func (c *Client) SpaceNotification() (*SpaceNotification, error) {
-
-	url := c.appendAPIKey(c.BaseURL + "/api/v2/space/notification")
-
-	req, _ := http.NewRequest("GET", url, nil)
-	res, err := c.HTTPClient.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-
-	bytes, er := ioutil.ReadAll(res.Body)
+	bytes, er := c.Get("/api/v2/space/notification", map[string]string{})
 
 	if er != nil {
 		return nil, er
@@ -84,19 +39,7 @@ func (c *Client) SpaceNotification() (*SpaceNotification, error) {
 
 // DiskUsage /api/v2/space/diskUsage
 func (c *Client) DiskUsage() (*DiskUsage, error) {
-
-	url := c.appendAPIKey(c.BaseURL + "/api/v2/space/diskUsage")
-
-	req, _ := http.NewRequest("GET", url, nil)
-	res, err := c.HTTPClient.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-
-	bytes, er := ioutil.ReadAll(res.Body)
+	bytes, er := c.Get("/api/v2/space/diskUsage", map[string]string{})
 
 	if er != nil {
 		return nil, er
@@ -110,25 +53,13 @@ func (c *Client) DiskUsage() (*DiskUsage, error) {
 
 // Users /api/v2/users
 func (c *Client) Users() (UserSlice, error) {
-	url := c.appendAPIKey(c.BaseURL + "/api/v2/users")
-
-	req, _ := http.NewRequest("GET", url, nil)
-	res, err := c.HTTPClient.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-
-	bytes, er := ioutil.ReadAll(res.Body)
+	bytes, er := c.Get("/api/v2/users", map[string]string{})
 
 	if er != nil {
 		return nil, er
 	}
 
 	if PrintResponseJSON {
-		fmt.Printf("[DEBUG] res: %#+v\n", res)
 		fmt.Println(string(bytes))
 	}
 
@@ -140,18 +71,7 @@ func (c *Client) Users() (UserSlice, error) {
 
 // Myself returns
 func (c *Client) Myself() (*User, error) {
-	url := c.appendAPIKey(c.BaseURL + "/api/v2/users/myself")
-
-	req, _ := http.NewRequest("GET", url, nil)
-	res, err := c.HTTPClient.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-
-	bytes, er := ioutil.ReadAll(res.Body)
+	bytes, er := c.Get("/api/v2/users/myself", map[string]string{})
 
 	if er != nil {
 		return nil, er
@@ -169,18 +89,7 @@ func (c *Client) Myself() (*User, error) {
 
 // Issues is
 func (c *Client) Issues() (IssueSlice, error) {
-	url := c.appendAPIKey(c.BaseURL + "/api/v2/issues")
-
-	req, _ := http.NewRequest("GET", url, nil)
-	res, err := c.HTTPClient.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-
-	bytes, er := ioutil.ReadAll(res.Body)
+	bytes, er := c.Get("/api/v2/issues", map[string]string{})
 
 	if er != nil {
 		return nil, er
@@ -196,6 +105,10 @@ func (c *Client) Issues() (IssueSlice, error) {
 // IssuesWithOption is
 func (c *Client) IssuesWithOption(opt *IssuesOption) (IssueSlice, error) {
 	url := c.appendAPIKey(c.BaseURL + "/api/v2/issues")
+
+	if c.HTTPClient == nil {
+		c.HTTPClient = http.DefaultClient
+	}
 
 	query, err := opt.ParamString()
 	if err != nil {
@@ -232,6 +145,10 @@ func (c *Client) IssuesWithOption(opt *IssuesOption) (IssueSlice, error) {
 // IssueWithKey is
 func (c *Client) IssueWithKey(issueIDOrKey string) (*Issue, error) {
 	url := c.appendAPIKey(c.BaseURL + "/api/v2/issues/" + issueIDOrKey)
+
+	if c.HTTPClient == nil {
+		c.HTTPClient = http.DefaultClient
+	}
 
 	req, _ := http.NewRequest("GET", url, nil)
 	res, err := c.HTTPClient.Do(req)
