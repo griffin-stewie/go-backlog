@@ -108,6 +108,36 @@ func (c *Client) DiskUsage() (*DiskUsage, error) {
 	return diskUsage, nil
 }
 
+// Users /api/v2/users
+func (c *Client) Users() (UserSlice, error) {
+	url := c.appendAPIKey(c.BaseURL + "/api/v2/users")
+
+	req, _ := http.NewRequest("GET", url, nil)
+	res, err := c.HTTPClient.Do(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+
+	bytes, er := ioutil.ReadAll(res.Body)
+
+	if er != nil {
+		return nil, er
+	}
+
+	if PrintResponseJSON {
+		fmt.Printf("[DEBUG] res: %#+v\n", res)
+		fmt.Println(string(bytes))
+	}
+
+	var users UserSlice
+	json.Unmarshal(bytes, &users)
+
+	return users, nil
+}
+
 // Myself returns
 func (c *Client) Myself() (*User, error) {
 	url := c.appendAPIKey(c.BaseURL + "/api/v2/users/myself")

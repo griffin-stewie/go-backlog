@@ -52,6 +52,7 @@ type IssueType struct {
 }
 
 // User represents
+// +gen * slice:"Where,Count,SortBy,GroupBy[string]"
 type User struct {
 	ID          *int    `json:"id,omitempty"`
 	UserID      *string `json:"userId,omitempty"`
