@@ -2,6 +2,7 @@ package gobacklog
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -31,7 +32,10 @@ func (c *Client) SpaceNotification() (*SpaceNotification, error) {
 		return nil, er
 	}
 
-	fmt.Println(string(bytes))
+	if PrintResponseJSON {
+		fmt.Println(string(bytes))
+	}
+
 	var spaceNotification *SpaceNotification
 	json.Unmarshal(bytes, &spaceNotification)
 	return spaceNotification, nil
@@ -45,7 +49,10 @@ func (c *Client) DiskUsage() (*DiskUsage, error) {
 		return nil, er
 	}
 
-	fmt.Println(string(bytes))
+	if PrintResponseJSON {
+		fmt.Println(string(bytes))
+	}
+
 	var diskUsage *DiskUsage
 	json.Unmarshal(bytes, &diskUsage)
 	return diskUsage, nil
@@ -87,6 +94,50 @@ func (c *Client) Myself() (*User, error) {
 	return user, nil
 }
 
+// ProjectWithID returns project information.
+// /api/v2/projects/:projectIdOrKey
+func (c *Client) ProjectWithID(projectID int) (*Project, error) {
+	endpoint := fmt.Sprintf("/api/v2/projects/%d", projectID)
+	bytes, er := c.Get(endpoint, map[string]string{})
+
+	if er != nil {
+		return nil, er
+	}
+
+	if PrintResponseJSON {
+		fmt.Println(string(bytes))
+	}
+
+	var proj *Project
+	json.Unmarshal(bytes, &proj)
+
+	return proj, nil
+}
+
+// ProjectWithKey returns project information.
+// /api/v2/projects/:projectIdOrKey
+func (c *Client) ProjectWithKey(projectKey string) (*Project, error) {
+	if len(projectKey) == 0 {
+		return nil, errors.New("invalid arguments")
+	}
+
+	endpoint := fmt.Sprintf("/api/v2/projects/%s", projectKey)
+	bytes, er := c.Get(endpoint, map[string]string{})
+
+	if er != nil {
+		return nil, er
+	}
+
+	if PrintResponseJSON {
+		fmt.Println(string(bytes))
+	}
+
+	var proj *Project
+	json.Unmarshal(bytes, &proj)
+
+	return proj, nil
+}
+
 // Issues is
 func (c *Client) Issues() (IssueSlice, error) {
 	bytes, er := c.Get("/api/v2/issues", map[string]string{})
@@ -95,7 +146,10 @@ func (c *Client) Issues() (IssueSlice, error) {
 		return nil, er
 	}
 
-	// fmt.Println(string(bytes))
+	if PrintResponseJSON {
+		fmt.Println(string(bytes))
+	}
+
 	var issues IssueSlice
 	json.Unmarshal(bytes, &issues)
 

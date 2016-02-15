@@ -115,3 +115,16 @@ func (d *DiskUsageDetail) Total() int {
 		*d.PullRequest
 	return total
 }
+
+// Project represents
+// +gen * slice:"Where,Count,SortBy,GroupBy[string]"
+type Project struct {
+	ID                                *int    `json:"id,omitempty"`
+	ProjectKey                        *string `json:"projectKey,omitempty"`
+	Name                              *string `json:"name,omitempty"`
+	ChartEnabled                      *bool   `json:"chartEnabled,omitempty"`
+	SubtaskingEnabled                 *bool   `json:"subtaskingEnabled,omitempty"`
+	ProjectLeaderCanEditProjectLeader *bool   `json:"projectLeaderCanEditProjectLeader,omitempty"`
+	TextFormattingRule                *string `json:"textFormattingRule,omitempty"`
+	Archived                          *bool   `json:"archived,omitempty"`
+}
