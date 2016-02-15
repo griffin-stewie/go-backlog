@@ -95,6 +95,30 @@ func (c *Client) Myself() (*User, error) {
 	return user, nil
 }
 
+// ProjectsWithOption returns project information.
+// /api/v2/projects
+func (c *Client) ProjectsWithOption(option *ProjectsOption) (ProjectSlice, error) {
+	params, er := option.Values()
+	if er != nil {
+		return nil, er
+	}
+
+	bytes, er := c.Get("/api/v2/projects", params)
+
+	if er != nil {
+		return nil, er
+	}
+
+	if PrintResponseJSON {
+		fmt.Println(string(bytes))
+	}
+
+	var projs ProjectSlice
+	json.Unmarshal(bytes, &projs)
+
+	return projs, nil
+}
+
 // ProjectWithID returns project information.
 // /api/v2/projects/:projectIdOrKey
 func (c *Client) ProjectWithID(projectID int) (*Project, error) {

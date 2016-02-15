@@ -38,3 +38,13 @@ func (c *IssuesOption) Values() (url.Values, error) {
 	return query.Values(c)
 }
 
+// ProjectsOption represents
+type ProjectsOption struct {
+	Archived bool `url:"archived,omitempty"`
+	All      bool `url:"all,omitempty"`
+}
+
+// Values returns
+func (c *ProjectsOption) Values() (url.Values, error) {
+	return query.Values(c)
+}
