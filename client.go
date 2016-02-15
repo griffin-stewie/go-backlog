@@ -12,6 +12,9 @@ import (
 	"strings"
 )
 
+// Verbose is bool
+var Verbose = false
+
 // BacklogErrorResponse is error model
 type BacklogErrorResponse struct {
 	Errors BacklogErrorSlice `json:"errors"`
@@ -64,22 +67,22 @@ func NewClient(baseURL, APIKey string) *Client {
 }
 
 // Get GET method
-func (c *Client) Get(endpoint string, params map[string]string) ([]byte, error) {
+func (c *Client) Get(endpoint string, params url.Values) ([]byte, error) {
 	return c.execute("GET", endpoint, params)
 }
 
 // Post POST method
-func (c *Client) Post(endpoint string, params map[string]string) ([]byte, error) {
+func (c *Client) Post(endpoint string, params url.Values) ([]byte, error) {
 	return c.execute("POST", endpoint, params)
 }
 
 // Put PUT method
-func (c *Client) Put(endpoint string, params map[string]string) ([]byte, error) {
+func (c *Client) Put(endpoint string, params url.Values) ([]byte, error) {
 	return c.execute("PUT", endpoint, params)
 }
 
 // Delete DELETE method
-func (c *Client) Delete(endpoint string, params map[string]string) ([]byte, error) {
+func (c *Client) Delete(endpoint string, params url.Values) ([]byte, error) {
 	return c.execute("DELETE", endpoint, params)
 }
 
@@ -103,16 +106,25 @@ func (c *Client) buildURL(baseURL, endpoint string, params map[string]string) st
 	return c.appendAPIKey(c.BaseURL+endpoint) + "&" + strings.Join(query, "&")
 }
 
+func (c *Client) buildURLWithValues(baseURL, endpoint string, params url.Values) string {
+	return c.appendAPIKey(c.BaseURL+endpoint) + "&" + params.Encode()
+}
+
 func (c *Client) parseBody(resp *http.Response) ([]byte, error) {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Println(err)
+		if Verbose {
+			log.Println(err)
+		}
+
 		return []byte(``), err
 	}
 
-	log.Printf("[DEBUG] resp: %#+v", resp)
-	log.Printf("[DEBUG] body: %v", string(body))
+	if Verbose {
+		log.Printf("[DEBUG] resp: %#+v", resp)
+		log.Printf("[DEBUG] body: %v", string(body))
+	}
 
 	if resp.StatusCode != 200 {
 		var er BacklogErrorResponse
@@ -123,7 +135,7 @@ func (c *Client) parseBody(resp *http.Response) ([]byte, error) {
 	return body, nil
 }
 
-func (c *Client) execute(method, endpoint string, params map[string]string) ([]byte, error) {
+func (c *Client) execute(method, endpoint string, params url.Values) ([]byte, error) {
 	if c.HTTPClient == nil {
 		c.HTTPClient = http.DefaultClient
 	}
@@ -134,10 +146,16 @@ func (c *Client) execute(method, endpoint string, params map[string]string) ([]b
 	)
 
 	if method != "GET" {
-		req, requestErr = http.NewRequest(method, c.appendAPIKey(c.BaseURL+endpoint), bytes.NewBufferString(c.buildBody(params).Encode()))
+		req, requestErr = http.NewRequest(method,
+			c.appendAPIKey(c.BaseURL+endpoint),
+			bytes.NewBufferString(params.Encode()),
+		)
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	} else {
-		req, requestErr = http.NewRequest(method, c.buildURL(c.BaseURL, endpoint, params), nil)
+		req, requestErr = http.NewRequest(method,
+			c.buildURLWithValues(c.BaseURL, endpoint, params),
+			nil,
+		)
 	}
 
 	if requestErr != nil {

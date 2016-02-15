@@ -2,6 +2,7 @@ package gobacklog
 
 import (
 	"github.com/google/go-querystring/query"
+	"net/url"
 )
 
 // IssueStatus enum
@@ -31,3 +32,9 @@ func (c *IssuesOption) ParamString() (string, error) {
 	}
 	return values.Encode(), nil
 }
+
+// Values returns
+func (c *IssuesOption) Values() (url.Values, error) {
+	return query.Values(c)
+}
+

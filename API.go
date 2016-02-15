@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 )
 
 // PrintResponseJSON is bool
@@ -13,7 +14,7 @@ var PrintResponseJSON = false
 
 // Space returns
 func (c *Client) Space() (*Space, error) {
-	bytes, er := c.Get("/api/v2/space", map[string]string{})
+	bytes, er := c.Get("/api/v2/space", url.Values{})
 
 	if er != nil {
 		return nil, er
@@ -26,7 +27,7 @@ func (c *Client) Space() (*Space, error) {
 
 // SpaceNotification /api/v2/space/notification
 func (c *Client) SpaceNotification() (*SpaceNotification, error) {
-	bytes, er := c.Get("/api/v2/space/notification", map[string]string{})
+	bytes, er := c.Get("/api/v2/space/notification", url.Values{})
 
 	if er != nil {
 		return nil, er
@@ -43,7 +44,7 @@ func (c *Client) SpaceNotification() (*SpaceNotification, error) {
 
 // DiskUsage /api/v2/space/diskUsage
 func (c *Client) DiskUsage() (*DiskUsage, error) {
-	bytes, er := c.Get("/api/v2/space/diskUsage", map[string]string{})
+	bytes, er := c.Get("/api/v2/space/diskUsage", url.Values{})
 
 	if er != nil {
 		return nil, er
@@ -60,7 +61,7 @@ func (c *Client) DiskUsage() (*DiskUsage, error) {
 
 // Users /api/v2/users
 func (c *Client) Users() (UserSlice, error) {
-	bytes, er := c.Get("/api/v2/users", map[string]string{})
+	bytes, er := c.Get("/api/v2/users", url.Values{})
 
 	if er != nil {
 		return nil, er
@@ -78,7 +79,7 @@ func (c *Client) Users() (UserSlice, error) {
 
 // Myself returns
 func (c *Client) Myself() (*User, error) {
-	bytes, er := c.Get("/api/v2/users/myself", map[string]string{})
+	bytes, er := c.Get("/api/v2/users/myself", url.Values{})
 
 	if er != nil {
 		return nil, er
@@ -98,7 +99,7 @@ func (c *Client) Myself() (*User, error) {
 // /api/v2/projects/:projectIdOrKey
 func (c *Client) ProjectWithID(projectID int) (*Project, error) {
 	endpoint := fmt.Sprintf("/api/v2/projects/%d", projectID)
-	bytes, er := c.Get(endpoint, map[string]string{})
+	bytes, er := c.Get(endpoint, url.Values{})
 
 	if er != nil {
 		return nil, er
@@ -122,7 +123,7 @@ func (c *Client) ProjectWithKey(projectKey string) (*Project, error) {
 	}
 
 	endpoint := fmt.Sprintf("/api/v2/projects/%s", projectKey)
-	bytes, er := c.Get(endpoint, map[string]string{})
+	bytes, er := c.Get(endpoint, url.Values{})
 
 	if er != nil {
 		return nil, er
@@ -140,7 +141,7 @@ func (c *Client) ProjectWithKey(projectKey string) (*Project, error) {
 
 // Issues is
 func (c *Client) Issues() (IssueSlice, error) {
-	bytes, er := c.Get("/api/v2/issues", map[string]string{})
+	bytes, er := c.Get("/api/v2/issues", url.Values{})
 
 	if er != nil {
 		return nil, er
