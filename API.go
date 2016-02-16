@@ -77,6 +77,25 @@ func (c *Client) Users() (UserSlice, error) {
 	return users, nil
 }
 
+// User /api/v2/users/:userId
+func (c *Client) User(userID int) (*User, error) {
+	endpoint := fmt.Sprintf("/api/v2/users/%d", userID)
+	bytes, er := c.Get(endpoint, url.Values{})
+
+	if er != nil {
+		return nil, er
+	}
+
+	if PrintResponseJSON {
+		fmt.Println(string(bytes))
+	}
+
+	var user *User
+	json.Unmarshal(bytes, &user)
+
+	return user, nil
+}
+
 // Myself returns
 func (c *Client) Myself() (*User, error) {
 	bytes, er := c.Get("/api/v2/users/myself", url.Values{})
