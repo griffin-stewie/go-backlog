@@ -117,7 +117,7 @@ func (d *DiskUsageDetail) Total() int {
 }
 
 // Project represents
-// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle,MaxBy,MaxBy,DistinctBy"
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
 type Project struct {
 	ID                                *int    `json:"id,omitempty"`
 	ProjectKey                        *string `json:"projectKey,omitempty"`

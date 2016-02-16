@@ -166,54 +166,6 @@ func (rcv ProjectSlice) Shuffle() ProjectSlice {
 	return result
 }
 
-// MaxBy returns an element of ProjectSlice containing the maximum value, when compared to other elements using a passed func defining ‘less’. In the case of multiple items being equally maximal, the last such element is returned. Returns error if no elements. See: http://clipperhouse.github.io/gen/#MaxBy
-func (rcv ProjectSlice) MaxBy(less func(*Project, *Project) bool) (result *Project, err error) {
-	l := len(rcv)
-	if l == 0 {
-		err = errors.New("cannot determine the MaxBy of an empty slice")
-		return
-	}
-	m := 0
-	for i := 1; i < l; i++ {
-		if rcv[i] != rcv[m] && !less(rcv[i], rcv[m]) {
-			m = i
-		}
-	}
-	result = rcv[m]
-	return
-}
-
-// MaxBy returns an element of ProjectSlice containing the maximum value, when compared to other elements using a passed func defining ‘less’. In the case of multiple items being equally maximal, the last such element is returned. Returns error if no elements. See: http://clipperhouse.github.io/gen/#MaxBy
-func (rcv ProjectSlice) MaxBy(less func(*Project, *Project) bool) (result *Project, err error) {
-	l := len(rcv)
-	if l == 0 {
-		err = errors.New("cannot determine the MaxBy of an empty slice")
-		return
-	}
-	m := 0
-	for i := 1; i < l; i++ {
-		if rcv[i] != rcv[m] && !less(rcv[i], rcv[m]) {
-			m = i
-		}
-	}
-	result = rcv[m]
-	return
-}
-
-// DistinctBy returns a new ProjectSlice whose elements are unique, where equality is defined by a passed func. See: http://clipperhouse.github.io/gen/#DistinctBy
-func (rcv ProjectSlice) DistinctBy(equal func(*Project, *Project) bool) (result ProjectSlice) {
-Outer:
-	for _, v := range rcv {
-		for _, r := range result {
-			if equal(v, r) {
-				continue Outer
-			}
-		}
-		result = append(result, v)
-	}
-	return result
-}
-
 // Sort implementation based on http://golang.org/pkg/sort/#Sort, see top of this file
 
 func swapProjectSlice(rcv ProjectSlice, a, b int) {
