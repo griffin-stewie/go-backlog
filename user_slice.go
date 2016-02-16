@@ -4,6 +4,11 @@
 
 package gobacklog
 
+import (
+	"errors"
+	"math/rand"
+)
+
 // Sort implementation is a modification of http://golang.org/pkg/sort/#Sort
 // Copyright 2009 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
@@ -53,6 +58,110 @@ func (rcv UserSlice) GroupByString(fn func(*User) string) map[string]UserSlice {
 	for _, v := range rcv {
 		key := fn(v)
 		result[key] = append(result[key], v)
+	}
+	return result
+}
+
+// GroupByInt groups elements into a map keyed by int. See: http://clipperhouse.github.io/gen/#GroupBy
+func (rcv UserSlice) GroupByInt(fn func(*User) int) map[int]UserSlice {
+	result := make(map[int]UserSlice)
+	for _, v := range rcv {
+		key := fn(v)
+		result[key] = append(result[key], v)
+	}
+	return result
+}
+
+// GroupByBool groups elements into a map keyed by bool. See: http://clipperhouse.github.io/gen/#GroupBy
+func (rcv UserSlice) GroupByBool(fn func(*User) bool) map[bool]UserSlice {
+	result := make(map[bool]UserSlice)
+	for _, v := range rcv {
+		key := fn(v)
+		result[key] = append(result[key], v)
+	}
+	return result
+}
+
+// First returns the first element that returns true for the passed func. Returns error if no elements return true. See: http://clipperhouse.github.io/gen/#First
+func (rcv UserSlice) First(fn func(*User) bool) (result *User, err error) {
+	for _, v := range rcv {
+		if fn(v) {
+			result = v
+			return
+		}
+	}
+	err = errors.New("no UserSlice elements return true for passed func")
+	return
+}
+
+// MaxBy returns an element of UserSlice containing the maximum value, when compared to other elements using a passed func defining ‘less’. In the case of multiple items being equally maximal, the last such element is returned. Returns error if no elements. See: http://clipperhouse.github.io/gen/#MaxBy
+func (rcv UserSlice) MaxBy(less func(*User, *User) bool) (result *User, err error) {
+	l := len(rcv)
+	if l == 0 {
+		err = errors.New("cannot determine the MaxBy of an empty slice")
+		return
+	}
+	m := 0
+	for i := 1; i < l; i++ {
+		if rcv[i] != rcv[m] && !less(rcv[i], rcv[m]) {
+			m = i
+		}
+	}
+	result = rcv[m]
+	return
+}
+
+// MinBy returns an element of UserSlice containing the minimum value, when compared to other elements using a passed func defining ‘less’. In the case of multiple items being equally minimal, the first such element is returned. Returns error if no elements. See: http://clipperhouse.github.io/gen/#MinBy
+func (rcv UserSlice) MinBy(less func(*User, *User) bool) (result *User, err error) {
+	l := len(rcv)
+	if l == 0 {
+		err = errors.New("cannot determine the Min of an empty slice")
+		return
+	}
+	m := 0
+	for i := 1; i < l; i++ {
+		if less(rcv[i], rcv[m]) {
+			m = i
+		}
+	}
+	result = rcv[m]
+	return
+}
+
+// Distinct returns a new UserSlice whose elements are unique. See: http://clipperhouse.github.io/gen/#Distinct
+func (rcv UserSlice) Distinct() (result UserSlice) {
+	appended := make(map[*User]bool)
+	for _, v := range rcv {
+		if !appended[v] {
+			result = append(result, v)
+			appended[v] = true
+		}
+	}
+	return result
+}
+
+// DistinctBy returns a new UserSlice whose elements are unique, where equality is defined by a passed func. See: http://clipperhouse.github.io/gen/#DistinctBy
+func (rcv UserSlice) DistinctBy(equal func(*User, *User) bool) (result UserSlice) {
+Outer:
+	for _, v := range rcv {
+		for _, r := range result {
+			if equal(v, r) {
+				continue Outer
+			}
+		}
+		result = append(result, v)
+	}
+	return result
+}
+
+// Shuffle returns a shuffled copy of UserSlice, using a version of the Fisher-Yates shuffle. See: http://clipperhouse.github.io/gen/#Shuffle
+func (rcv UserSlice) Shuffle() UserSlice {
+	numItems := len(rcv)
+	result := make(UserSlice, numItems)
+	copy(result, rcv)
+	for i := 0; i < numItems; i++ {
+		r := i + rand.Intn(numItems-i)
+		result[r], result[i] = result[i], result[r]
 	}
 	return result
 }

@@ -5,7 +5,7 @@ import (
 )
 
 // Issue represents
-// +gen * slice:"Where,Count,SortBy,GroupBy[string]"
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
 type Issue struct {
 	ID          *int      `json:"id,omitempty"`
 	ProjectID   *int      `json:"projectId,omitempty"`
@@ -52,7 +52,7 @@ type IssueType struct {
 }
 
 // User represents
-// +gen * slice:"Where,Count,SortBy,GroupBy[string]"
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
 type User struct {
 	ID          *int    `json:"id,omitempty"`
 	UserID      *string `json:"userId,omitempty"`
@@ -94,7 +94,7 @@ type DiskUsage struct {
 }
 
 // DiskUsageDetail represents
-// +gen * slice:"Where,Count,SortBy,GroupBy[string]"
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
 type DiskUsageDetail struct {
 	ProjectID   *int `json:"projectId,omitempty"`
 	Issue       *int `json:"issue,omitempty"`
@@ -117,7 +117,7 @@ func (d *DiskUsageDetail) Total() int {
 }
 
 // Project represents
-// +gen * slice:"Where,Count,SortBy,GroupBy[string]"
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle,MaxBy,MaxBy,DistinctBy"
 type Project struct {
 	ID                                *int    `json:"id,omitempty"`
 	ProjectKey                        *string `json:"projectKey,omitempty"`
