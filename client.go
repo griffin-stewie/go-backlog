@@ -136,6 +136,16 @@ func (c *Client) parseBody(resp *http.Response) ([]byte, error) {
 }
 
 func (c *Client) execute(method, endpoint string, params url.Values) ([]byte, error) {
+	resp, err := c.executeReturnsResponse(method, endpoint, params)
+
+	if err != nil {
+		return []byte(``), err
+	}
+
+	return c.parseBody(resp)
+}
+
+func (c *Client) executeReturnsResponse(method, endpoint string, params url.Values) (resp *http.Response, err error) {
 	if c.HTTPClient == nil {
 		c.HTTPClient = http.DefaultClient
 	}
@@ -162,11 +172,5 @@ func (c *Client) execute(method, endpoint string, params url.Values) ([]byte, er
 		panic(requestErr)
 	}
 
-	resp, err := c.HTTPClient.Do(req)
-
-	if err != nil {
-		return []byte(``), err
-	}
-
-	return c.parseBody(resp)
+	return c.HTTPClient.Do(req)
 }

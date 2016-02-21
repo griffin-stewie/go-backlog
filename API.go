@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"mime"
 	"net/http"
 	"net/url"
 )
@@ -271,4 +273,27 @@ func (c *Client) IssueWithKey(issueIDOrKey string) (*Issue, error) {
 	json.Unmarshal(bytes, issue)
 
 	return issue, nil
+}
+
+// DownloadAttachment returns
+// /api/v2/issues/:issueIdOrKey/attachments/:attachmentId
+func (c *Client) DownloadAttachment(issueIDOrKey string, attachmentID int) (io.ReadCloser, string, error) {
+	if len(issueIDOrKey) == 0 {
+		return nil, "", errors.New("issueIDOrKey is too short")
+	}
+	endpoint := fmt.Sprintf("/api/v2/issues/%s/attachments/%d", issueIDOrKey, attachmentID)
+	resp, er := c.executeReturnsResponse("GET", endpoint, url.Values{})
+
+	if er != nil {
+		return nil, "", er
+	}
+
+	a, _ := resp.Header["Content-Disposition"]
+	_, params, err := mime.ParseMediaType(a[0])
+
+	if err != nil {
+		return nil, "", er
+	}
+
+	return resp.Body, params["filename"], nil
 }
