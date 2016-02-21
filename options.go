@@ -22,6 +22,7 @@ type IssuesOption struct {
 	ProjectIDs  []int         `url:"projectId[],omitempty"`
 	AssigneeIds []int         `url:"assigneeId[],omitempty"`
 	Statuses    []IssueStatus `url:"statusId[],omitempty"`
+	SharedFile  bool          `url:"sharedFile,omitempty"`
 }
 
 // ParamString returns

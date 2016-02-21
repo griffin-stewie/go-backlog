@@ -7,34 +7,33 @@ import (
 // Issue represents
 // +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
 type Issue struct {
-	ID          *int      `json:"id,omitempty"`
-	ProjectID   *int      `json:"projectId,omitempty"`
-	IssueKey    *string   `json:"issueKey,omitempty"`
-	KeyID       *int      `json:"keyId,omitempty"`
-	IssueType   IssueType `json:"issueType,omitempty"`
-	Summary     *string   `json:"summary,omitempty"`
-	Description *string   `json:"description,omitempty"`
-	// Resolution interface{} `json:"resolution,omitempty"`
-	// Priority interface{} `json:"priority,omitempty"`
-	// Status interface{} `json:"status,omitempty"`
-	// Assignee interface{} `json:"assignee,omitempty"`
-	// Category interface{} `json:"category,omitempty"`
-	// Versions interface{} `json:"versions,omitempty"`
-	// Milestone interface{} `json:"milestone,omitempty"`
-	StartDate *time.Time `json:"startDate,omitempty"`
-	DueDate   *time.Time `json:"dueDate,omitempty"`
-	// EstimatedHours interface{} `json:"estimatedHours,omitempty"`
-	// ActualHours interface{} `json:"actualHours,omitempty"`
-	ParentIssueID *int `json:"parentIssueId,omitempty"`
-	// CreatedUser interface{} `json:"createdUser,omitempty"`
-	Created *time.Time `json:"created,omitempty"`
-
-	// UpdatedUser interface{} `json:"updatedUser,omitempty"`
-	Updated *time.Time `json:"updated,omitempty"`
-	// CustomFields []interface{} `json:"customFields,omitempty"`
-	// Attachments interface{} `json:"attachments,omitempty"`
-	// SharedFiles interface{} `json:"sharedFiles,omitempty"`
-	// Stars interface{} `json:"stars,omitempty"`
+	ID             *int             `json:"id,omitempty"`
+	ProjectID      *int             `json:"projectId,omitempty"`
+	IssueKey       *string          `json:"issueKey,omitempty"`
+	KeyID          *int             `json:"keyId,omitempty"`
+	IssueType      IssueType        `json:"issueType,omitempty"`
+	Summary        *string          `json:"summary,omitempty"`
+	Description    *string          `json:"description,omitempty"`
+	Resolution     Resolution       `json:"resolution,omitempty"`
+	Priority       Priority         `json:"priority,omitempty"`
+	Status         Status           `json:"status,omitempty"`
+	Assignee       Assignee         `json:"assignee,omitempty"`
+	Category       CategorySlice    `json:"category,omitempty"`
+	Versions       VersionSlice     `json:"versions,omitempty"`
+	Milestone      VersionSlice     `json:"milestone,omitempty"`
+	StartDate      *time.Time       `json:"startDate,omitempty"`
+	DueDate        *time.Time       `json:"dueDate,omitempty"`
+	EstimatedHours *int             `json:"estimatedHours,omitempty"`
+	ActualHours    *int             `json:"actualHours,omitempty"`
+	ParentIssueID  *int             `json:"parentIssueId,omitempty"`
+	CreatedUser    *User            `json:"createdUser,omitempty"`
+	Created        *time.Time       `json:"created,omitempty"`
+	UpdatedUser    *User            `json:"updatedUser,omitempty"`
+	Updated        *time.Time       `json:"updated,omitempty"`
+	CustomFields   CustomFieldSlice `json:"customFields,omitempty"`
+	Attachments    AttachmentSlice  `json:"attachments,omitempty"`
+	SharedFiles    SharedFileSlice  `json:"sharedFiles,omitempty"`
+	Stars          StarSlice        `json:"stars,omitempty"`
 }
 
 // Issues represents
@@ -51,6 +50,55 @@ type IssueType struct {
 	DisplayOrder *int    `json:"displayOrder,omitempty"`
 }
 
+// Resolution represents
+type Resolution struct {
+	ID   *int    `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// Priority represents
+type Priority struct {
+	ID   *int    `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// Status represents
+type Status struct {
+	ID   *int    `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// Assignee represents
+type Assignee struct {
+	ID          *int    `json:"id,omitempty"`
+	UserID      *string `json:"userId,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	RoleType    *int    `json:"roleType,omitempty"`
+	Lang        *string `json:"lang,omitempty"`
+	MailAddress *string `json:"mailAddress,omitempty"`
+}
+
+// Category represents
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
+type Category struct {
+	ID           *int    `json:"id,omitempty"`
+	Name         *string `json:"name,omitempty"`
+	DisplayOrder *int    `json:"displayOrder,omitempty"`
+}
+
+// Version represents
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
+type Version struct {
+	ID             *int       `json:"id,omitempty"`
+	ProjectID      *int       `json:"projectId,omitempty"`
+	Name           *string    `json:"name,omitempty"`
+	Description    *string    `json:"description,omitempty"`
+	StartDate      *time.Time `json:"startDate,omitempty"`
+	ReleaseDueDate *time.Time `json:"releaseDueDate,omitempty"`
+	Archived       *bool      `json:"archived,omitempty"`
+	DisplayOrder   *int       `json:"displayOrder,omitempty"`
+}
+
 // User represents
 // +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
 type User struct {
@@ -60,6 +108,58 @@ type User struct {
 	RoleType    *int    `json:"roleType,omitempty"`
 	Lang        *string `json:"lang,omitempty"`
 	MailAddress *string `json:"mailAddress,omitempty"`
+}
+
+// CustomField represents
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
+type CustomField struct {
+	ID          *int                   `json:"id,omitempty"`
+	Name        *string                `json:"name,omitempty"`
+	FieldTypeID *int                   `json:"fieldTypeId,omitempty"`
+	Value       *CustomFieldValueSlice `json:"value,omitempty"`
+}
+
+// CustomFieldValue represents
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
+type CustomFieldValue struct {
+	ID           *int    `json:"id,omitempty"`
+	Name         *string `json:"name,omitempty"`
+	DisplayOrder *int    `json:"displayOrder,omitempty"`
+}
+
+// Attachment represents
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
+type Attachment struct {
+	ID          *int       `json:"id,omitempty"`
+	Name        *string    `json:"name,omitempty"`
+	Size        *int64     `json:"size,omitempty"`
+	CreatedUser *User      `json:"createdUser,omitempty"`
+	Created     *time.Time `json:"created,omitempty"`
+}
+
+// SharedFile represents
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
+type SharedFile struct {
+	ID          *int       `json:"id,omitempty"`
+	Type        *string    `json:"type,omitempty"`
+	Directory   *string    `json:"dir,omitempty"`
+	Name        *string    `json:"name,omitempty"`
+	Size        *int64     `json:"size,omitempty"`
+	CreatedUser *User      `json:"createdUser,omitempty"`
+	Created     *time.Time `json:"created,omitempty"`
+	UpdatedUser *User      `json:"updatedUser,omitempty"`
+	Updated     *time.Time `json:"updated,omitempty"`
+}
+
+// Star represents
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
+type Star struct {
+	ID        *int       `json:"id,omitempty"`
+	Comment   *string    `json:"comment,omitempty"`
+	URL       *string    `json:"url,omitempty"`
+	Title     *string    `json:"name,omitempty"`
+	Created   *time.Time `json:"created,omitempty"`
+	Presenter *User      `json:"presenter,omitempty"`
 }
 
 // Space represents
