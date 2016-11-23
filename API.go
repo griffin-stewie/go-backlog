@@ -27,6 +27,34 @@ func (c *Client) Space() (*Space, error) {
 	return space, nil
 }
 
+// SpaceActivities `/api/v2/space/activities`
+func (c *Client) SpaceActivities(option *ActivitiesOption) (ActivitySlice, error) {
+	var params url.Values
+	if option == nil {
+		params = url.Values{}
+	}
+
+	params, er := option.Values()
+	if er != nil {
+		return nil, er
+	}
+
+	bytes, er := c.Get("/api/v2/space/activities", params)
+
+	if er != nil {
+		return nil, er
+	}
+
+	if PrintResponseJSON {
+		fmt.Println(string(bytes))
+	}
+
+	var model ActivitySlice
+	json.Unmarshal(bytes, &model)
+
+	return model, nil
+}
+
 // SpaceNotification /api/v2/space/notification
 func (c *Client) SpaceNotification() (*SpaceNotification, error) {
 	bytes, er := c.Get("/api/v2/space/notification", url.Values{})

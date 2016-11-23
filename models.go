@@ -102,12 +102,13 @@ type Version struct {
 // User represents
 // +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
 type User struct {
-	ID          *int    `json:"id,omitempty"`
-	UserID      *string `json:"userId,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	RoleType    *int    `json:"roleType,omitempty"`
-	Lang        *string `json:"lang,omitempty"`
-	MailAddress *string `json:"mailAddress,omitempty"`
+	ID           *int    `json:"id,omitempty"`
+	UserID       *string `json:"userId,omitempty"`
+	Name         *string `json:"name,omitempty"`
+	RoleType     *int    `json:"roleType,omitempty"`
+	Lang         *string `json:"lang,omitempty"`
+	MailAddress  *string `json:"mailAddress,omitempty"`
+	NulabAccount *string `json:"nulabAccount,omitempty"`
 }
 
 // CustomField represents
@@ -225,6 +226,49 @@ type Project struct {
 	ChartEnabled                      *bool   `json:"chartEnabled,omitempty"`
 	SubtaskingEnabled                 *bool   `json:"subtaskingEnabled,omitempty"`
 	ProjectLeaderCanEditProjectLeader *bool   `json:"projectLeaderCanEditProjectLeader,omitempty"`
+	UseWikiTreeView                   *bool   `json:"useWikiTreeView,omitempty"`
 	TextFormattingRule                *string `json:"textFormattingRule,omitempty"`
 	Archived                          *bool   `json:"archived,omitempty"`
+	DisplayOrder                      *int    `json:"displayOrder,omitempty"`
+}
+
+// Activity represents
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
+type Activity struct {
+	ID      *int     `json:"id,omitempty"`
+	Project *Project `json:"project,omitempty"`
+	Type    *int     `json:"type,omitempty"`
+	Content *Content `json:"content,omitempty"`
+	// Notifications *Notification `json:"notifications,omitempty"` // TODO
+	CreatedUser *User      `json:"createdUser,omitempty"`
+	Created     *time.Time `json:"created,omitempty"`
+}
+
+// Content represents
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
+type Content struct {
+	ID          *int            `json:"id,omitempty"`
+	KeyID       *int            `json:"key_id,omitempty"`
+	Summary     *string         `json:"summary,omitempty"`
+	Description *string         `json:"description,omitempty"`
+	Comment     *Comment        `json:"comment,omitempty"`
+	Changes     *ChangeSlice    `json:"changes,omitempty"`
+	Attachments AttachmentSlice `json:"attachments,omitempty"`
+	SharedFile  *SharedFile     `json:"shared_files,omitempty"`
+}
+
+// Change represents
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
+type Change struct {
+	Field    *string `json:"field,omitempty"`
+	NewValue *string `json:"new_value,omitempty"`
+	OldValue *string `json:"old_value,omitempty"`
+	Type     *string `json:"type,omitempty"`
+}
+
+// Comment represents
+// +gen * slice:"Where,Count,SortBy,GroupBy[string],GroupBy[int],GroupBy[bool],first,MaxBy,MinBy,Distinct,DistinctBy,Shuffle"
+type Comment struct {
+	ID      *int    `json:"id,omitempty"`
+	Content *string `json:"content,omitempty"`
 }
