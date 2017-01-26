@@ -6,7 +6,7 @@ import (
 
 func TestBuildQueryPramString(t *testing.T) {
 	input := &IssuesOption{
-		AssigneeIds: []int{999999999},
+		AssigneeIDs: []int{999999999},
 		Statuses:    []IssueStatus{1, 2, 3},
 	}
 

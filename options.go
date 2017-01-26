@@ -30,7 +30,7 @@ const (
 type IssuesOption struct {
 	IDs         []int         `url:"id[],omitempty"`
 	ProjectIDs  []int         `url:"projectId[],omitempty"`
-	AssigneeIds []int         `url:"assigneeId[],omitempty"`
+	AssigneeIDs []int         `url:"assigneeId[],omitempty"`
 	Statuses    []IssueStatus `url:"statusId[],omitempty"`
 	SharedFile  bool          `url:"sharedFile,omitempty"`
 }
