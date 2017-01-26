@@ -58,6 +58,9 @@ type Client struct {
 
 // NewClient returns Backlog HTTP Client
 func NewClient(baseURL, APIKey string) *Client {
+	if strings.HasSuffix(baseURL, "/") {
+		baseURL = baseURL[0 : len(baseURL)-1]
+	}
 	s := &Client{
 		BaseURL: baseURL,
 		APIKey:  APIKey,
