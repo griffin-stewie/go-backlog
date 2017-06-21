@@ -110,7 +110,11 @@ func (c *Client) buildURL(baseURL, endpoint string, params map[string]string) st
 }
 
 func (c *Client) buildURLWithValues(baseURL, endpoint string, params url.Values) string {
-	return c.appendAPIKey(c.BaseURL+endpoint) + "&" + params.Encode()
+	encodedParamsString := params.Encode()
+	if len(encodedParamsString) == 0 {
+		return c.appendAPIKey(c.BaseURL + endpoint)
+	}
+	return c.appendAPIKey(c.BaseURL+endpoint) + "&" + encodedParamsString
 }
 
 func (c *Client) parseBody(resp *http.Response) ([]byte, error) {
