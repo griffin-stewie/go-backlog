@@ -232,7 +232,7 @@ func (c *Client) Issues() (IssueSlice, error) {
 
 // IssuesWithOption is
 func (c *Client) IssuesWithOption(opt *IssuesOption) (IssueSlice, error) {
-	url := c.appendAPIKey(c.BaseURL + "/api/v2/issues")
+	url := c.appendAPIKey(c.BaseURL.String() + "/api/v2/issues")
 
 	if c.HTTPClient == nil {
 		c.HTTPClient = http.DefaultClient
@@ -272,7 +272,7 @@ func (c *Client) IssuesWithOption(opt *IssuesOption) (IssueSlice, error) {
 
 // IssueWithKey is
 func (c *Client) IssueWithKey(issueIDOrKey string) (*Issue, error) {
-	url := c.appendAPIKey(c.BaseURL + "/api/v2/issues/" + issueIDOrKey)
+	url := c.appendAPIKey(c.BaseURL.String() + "/api/v2/issues/" + issueIDOrKey)
 
 	if c.HTTPClient == nil {
 		c.HTTPClient = http.DefaultClient

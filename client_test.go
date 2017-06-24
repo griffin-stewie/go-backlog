@@ -26,8 +26,9 @@ func TestNewClientAdjustedBaseURL(t *testing.T) {
 		},
 	}
 	for _, v := range tab {
-		c := NewClient(v.BaseURL, "")
-		if c.BaseURL != v.AdjustedURL {
+		url, _ := url.Parse(v.BaseURL)
+		c := NewClient(url, "")
+		if c.BaseURL.String() != v.AdjustedURL {
 			t.Errorf(`NewClient(%q, ""): BaseURL = %q; want %q`, v.BaseURL, c.BaseURL, v.AdjustedURL)
 		}
 	}
@@ -55,8 +56,10 @@ func TestResolvingURL(t *testing.T) {
 		},
 	}
 	for _, v := range tab {
-		c := NewClient(v.BaseURL, apiKey)
-		result := c.buildURLWithValues(v.BaseURL, v.Endpoint, v.Params)
+		url, _ := url.Parse(v.BaseURL)
+		c := NewClient(url, apiKey)
+		// result := c.buildURLWithValues(v.BaseURL, v.Endpoint, v.Params)
+		result := c.composeURL(v.Endpoint, v.Params)
 		if result != v.AdjustedURL {
 			req, requestErr := http.NewRequest("GET",
 				result,
