@@ -1,23 +1,3 @@
-# go-backlog
-
-[![GoDoc](https://godoc.org/github.com/garyburd/redigo/redis?status.svg)](https://godoc.org/github.com/griffin-stewie/go-backlog)
-
-[Backlog API](http://developer.nulab-inc.com/ja/docs/backlog/ "Backlog API とは | Backlog | Nulab Developers") Client for Golang.
-
-## Install
-
-```sh
-$ go get github.com/griffin-stewie/go-backlog
-```
-
-## Usage
-
-```sh
-$ go run ./example/main.go
-```
-
-```go
-// Sample code
 package main
 
 import (
@@ -48,4 +28,3 @@ func main() {
 
 	log.Printf("issues: %#+v", issues)
 }
-```
