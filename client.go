@@ -3,6 +3,7 @@ package gobacklog
 import (
 	"bytes"
 	"encoding/json"
+	"path"
 	// "fmt"
 	"errors"
 	"io/ioutil"
@@ -51,16 +52,13 @@ type HTTP interface {
 
 // Client is
 type Client struct {
-	BaseURL    string
+	BaseURL    *url.URL
 	HTTPClient *http.Client
 	APIKey     string
 }
 
 // NewClient returns Backlog HTTP Client
-func NewClient(baseURL, APIKey string) *Client {
-	if strings.HasSuffix(baseURL, "/") {
-		baseURL = baseURL[0 : len(baseURL)-1]
-	}
+func NewClient(baseURL *url.URL, APIKey string) *Client {
 	s := &Client{
 		BaseURL: baseURL,
 		APIKey:  APIKey,
@@ -89,28 +87,12 @@ func (c *Client) Delete(endpoint string, params url.Values) ([]byte, error) {
 	return c.execute("DELETE", endpoint, params)
 }
 
-func (c *Client) appendAPIKey(URL string) string {
-	return URL + "?apiKey=" + c.APIKey
-}
-
-func (c *Client) buildBody(params map[string]string) url.Values {
-	body := url.Values{}
-	for k := range params {
-		body.Add(k, params[k])
-	}
-	return body
-}
-
-func (c *Client) buildURL(baseURL, endpoint string, params map[string]string) string {
-	query := make([]string, len(params))
-	for k := range params {
-		query = append(query, k+"="+params[k])
-	}
-	return c.appendAPIKey(c.BaseURL+endpoint) + "&" + strings.Join(query, "&")
-}
-
-func (c *Client) buildURLWithValues(baseURL, endpoint string, params url.Values) string {
-	return c.appendAPIKey(c.BaseURL+endpoint) + "&" + params.Encode()
+func (c *Client) composeURL(pathStr string, params url.Values) string {
+	copiedURL := *c.BaseURL
+	copiedURL.Path = path.Join(copiedURL.Path, pathStr)
+	params.Set("apiKey", c.APIKey)
+	copiedURL.RawQuery = params.Encode()
+	return copiedURL.String()
 }
 
 func (c *Client) parseBody(resp *http.Response) ([]byte, error) {
@@ -160,13 +142,13 @@ func (c *Client) executeReturnsResponse(method, endpoint string, params url.Valu
 
 	if method != "GET" {
 		req, requestErr = http.NewRequest(method,
-			c.appendAPIKey(c.BaseURL+endpoint),
+			c.composeURL(endpoint, url.Values{}),
 			bytes.NewBufferString(params.Encode()),
 		)
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	} else {
 		req, requestErr = http.NewRequest(method,
-			c.buildURLWithValues(c.BaseURL, endpoint, params),
+			c.composeURL(endpoint, params),
 			nil,
 		)
 	}
