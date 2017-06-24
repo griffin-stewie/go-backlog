@@ -5,9 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"mime"
-	"net/http"
 	"net/url"
 )
 
@@ -232,29 +230,11 @@ func (c *Client) Issues() (IssueSlice, error) {
 
 // IssuesWithOption is
 func (c *Client) IssuesWithOption(opt *IssuesOption) (IssueSlice, error) {
-	url := c.appendAPIKey(c.BaseURL.String() + "/api/v2/issues")
-
-	if c.HTTPClient == nil {
-		c.HTTPClient = http.DefaultClient
+	params, er := opt.Values()
+	if er != nil {
+		return nil, er
 	}
-
-	query, err := opt.ParamString()
-	if err != nil {
-		return nil, err
-	}
-
-	url = url + "&" + query
-
-	req, _ := http.NewRequest("GET", url, nil)
-	res, err := c.HTTPClient.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-
-	bytes, er := ioutil.ReadAll(res.Body)
+	bytes, er := c.Get("/api/v2/issues", params)
 
 	if er != nil {
 		return nil, er
@@ -272,22 +252,7 @@ func (c *Client) IssuesWithOption(opt *IssuesOption) (IssueSlice, error) {
 
 // IssueWithKey is
 func (c *Client) IssueWithKey(issueIDOrKey string) (*Issue, error) {
-	url := c.appendAPIKey(c.BaseURL.String() + "/api/v2/issues/" + issueIDOrKey)
-
-	if c.HTTPClient == nil {
-		c.HTTPClient = http.DefaultClient
-	}
-
-	req, _ := http.NewRequest("GET", url, nil)
-	res, err := c.HTTPClient.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-
-	bytes, er := ioutil.ReadAll(res.Body)
+	bytes, er := c.Get("/api/v2/issues/"+issueIDOrKey, url.Values{})
 
 	if er != nil {
 		return nil, er
@@ -297,10 +262,11 @@ func (c *Client) IssueWithKey(issueIDOrKey string) (*Issue, error) {
 		fmt.Println(string(bytes))
 	}
 
-	issue := &Issue{}
-	json.Unmarshal(bytes, issue)
+	var issue *Issue
+	json.Unmarshal(bytes, &issue)
 
 	return issue, nil
+
 }
 
 // DownloadAttachment returns

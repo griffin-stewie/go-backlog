@@ -87,24 +87,12 @@ func (c *Client) Delete(endpoint string, params url.Values) ([]byte, error) {
 	return c.execute("DELETE", endpoint, params)
 }
 
-func (c *Client) appendAPIKey(URL string) string {
-	return URL + "?apiKey=" + c.APIKey
-}
-
 func (c *Client) composeURL(pathStr string, params url.Values) string {
 	copiedURL := *c.BaseURL
 	copiedURL.Path = path.Join(copiedURL.Path, pathStr)
-	log.Printf("[DEBUG] c.BaseURL: %#+v ,%p", c.BaseURL, c.BaseURL)
-	log.Printf("[DEBUG] copiedURL: %#+v ,%p", copiedURL, copiedURL)
+	params.Set("apiKey", c.APIKey)
+	copiedURL.RawQuery = params.Encode()
 	return copiedURL.String()
-}
-
-func (c *Client) buildURLWithValues(baseURL, endpoint string, params url.Values) string {
-	encodedParamsString := params.Encode()
-	if len(encodedParamsString) == 0 {
-		return c.appendAPIKey(c.BaseURL.String() + endpoint)
-	}
-	return c.appendAPIKey(c.BaseURL.String()+endpoint) + "&" + encodedParamsString
 }
 
 func (c *Client) parseBody(resp *http.Response) ([]byte, error) {
@@ -154,13 +142,13 @@ func (c *Client) executeReturnsResponse(method, endpoint string, params url.Valu
 
 	if method != "GET" {
 		req, requestErr = http.NewRequest(method,
-			c.appendAPIKey(c.BaseURL.String()+endpoint),
+			c.composeURL(endpoint, url.Values{}),
 			bytes.NewBufferString(params.Encode()),
 		)
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	} else {
 		req, requestErr = http.NewRequest(method,
-			c.buildURLWithValues(c.BaseURL.String(), endpoint, params),
+			c.composeURL(endpoint, params),
 			nil,
 		)
 	}
