@@ -33,6 +33,9 @@ type IssuesOption struct {
 	AssigneeIDs []int         `url:"assigneeId[],omitempty"`
 	Statuses    []IssueStatus `url:"statusId[],omitempty"`
 	SharedFile  bool          `url:"sharedFile,omitempty"`
+	Count       int           `url:"count,omitempty"`
+	Offset      int           `url:"offset,omitempty"`
+	Keyword     string        `url:"keyword,omitempty"`
 }
 
 // ParamString returns
